@@ -4,10 +4,12 @@ from starr.bot import StarrBot
 
 
 if __name__ == "__main__":
-    bot = StarrBot()
-    bot.run(
+    dotenv.load_dotenv()  # FIXME: Would a config file be better? That way we can give an example of how it should be setup
+    # config.yml.example
+    
+    StarrBot().run(
         activity=hikari.Activity(
-            name="for stars!",
+            name="the stars!",
             type=hikari.ActivityType.WATCHING,
         )
     )

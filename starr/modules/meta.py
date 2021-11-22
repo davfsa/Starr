@@ -11,7 +11,7 @@ meta = tanjun.Component(name="meta").add_check(tanjun.checks.GuildCheck())
 
 async def _ping(ctx: tanjun.abc.Context, bot: StarrBot) -> None:
     start = time.perf_counter()
-    message = await ctx.respond("uwu-owo", ensure_result=True)
+    message = await ctx.respond("uwu-owo", ensure_result=True)  # FIXME: ehhhhhhhhhh
     elapsed = time.perf_counter() - start
 
     await message.edit(f"Gateway: {bot.heartbeat_latency * 1000:,.2f} ms\nRest: {elapsed * 1000:,.2f} ms")
