@@ -10,25 +10,24 @@ from starr.db import Database
 from starr.logging import Logger
 from starr.models import GuildStore, StarrGuild
 
-dotenv.load_dotenv()
-
 
 class StarrBot(hikari.GatewayBot):
 
     __slots__ = ("star", "db", "guilds", "log", "client")
 
     def __init__(self) -> None:
+        dotenv.load_dotenv()
+        
         super().__init__(
             token=environ["TOKEN"],
             intents=(
                 hikari.Intents.GUILD_MESSAGE_REACTIONS |
                 hikari.Intents.GUILD_MESSAGES |
-                hikari.Intents.GUILD_MEMBERS |
                 hikari.Intents.GUILDS
             )
         )
 
-        self.star = "⭐"
+        self.star = "⭐" # FIXME: Change to be cross compatible on Discord and stored as 
         self.db = Database()
         self.guilds = GuildStore()
         self.log = Logger.setup()
@@ -47,7 +46,7 @@ class StarrBot(hikari.GatewayBot):
         ] = {
             hikari.StartingEvent: self.on_starting,
             hikari.StartedEvent: self.on_started,
-            hikari.StoppingEvent: self.on_stopping,
+            hikari.StoppedEvent: self.on_stopping,
             hikari.GuildAvailableEvent: self.on_guild_available,
             hikari.GuildJoinEvent: self.on_guild_available,
         }
@@ -63,7 +62,7 @@ class StarrBot(hikari.GatewayBot):
             for guild in data:
                 self.guilds.insert(StarrGuild(*guild))
 
-    async def on_stopping(self, _: hikari.StoppingEvent) -> None:
+    async def on_stopping(self, _: hikari.StoppedEvent) -> None:
         await self.db.close()
 
     async def on_guild_available(
@@ -80,4 +79,4 @@ class StarrBot(hikari.GatewayBot):
         if guild := self.guilds.get(ctx.guild_id):
             return guild.prefix,
 
-        return "$",
+        return ("$",)
